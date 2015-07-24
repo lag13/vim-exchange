@@ -129,8 +129,13 @@ function! s:exchange_set(type, ...)
 	if !exists('b:exchange')
 		let b:exchange = s:exchange_get(a:type, a:0)
 		let b:exchange_matches = s:highlight(b:exchange)
-		" Tell tpope/vim-repeat that '.' should repeat the Exchange motion
-		silent! call repeat#invalidate()
+		" Tell tpope/vim-repeat that '.' should repeat the Exchange operator
+		if v:version < 704
+			" Ensures that custom text-objects are successfully repeated
+			let g:repeat_tick = -1
+		else
+			silent! call repeat#invalidate()
+		endif
 	else
 		let exchange1 = b:exchange
 		let exchange2 = s:exchange_get(a:type, a:0)
